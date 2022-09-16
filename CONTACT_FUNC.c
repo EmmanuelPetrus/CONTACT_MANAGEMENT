@@ -232,13 +232,15 @@ void searchContact()
         if (!found)
         {
             printf("\n..::No match found!");
-            printf("\n ..::Try again?\n\n\t[1] Yes\t\t[0] No\n\t");
+            printf("\n ..::Try again?\n[1] Yes\t\t[0] No:\t");
+            scanf("%d", &ch);
         }
         else
+        {
             printf("\n..::%d match(s) found!", found);
+            break;
+        }
         fclose(fp);
-
-        scanf("%d", &ch);
 
     } while (ch == 1);
 }
