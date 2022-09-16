@@ -51,14 +51,10 @@ void listContact(CONTACT *b)
     fflush(stdin);
 
     int found = 0;
-    printf("step\n");
+
     while (fread(b, sizeof(CONTACT), 1, fp))
-
     {
-        printf("\nName\t: %sPhone\t: %s\nAddress\t: %s\nEmail\t: %s\n", b->name,
-
-               b->number, b->address, b->email);
-
+        printf("\nName\t: %sPhone\t: %ld\nAddress\t: %sEmail\t: %s\n", b->name, b->number, b->address, b->email);
         found++;
     }
 

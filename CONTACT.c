@@ -5,6 +5,7 @@ int main()
 {
     int ch;
     CONTACT con;
+    memset(&con, 0, sizeof(CONTACT));
     CONTACT *pCon = &con;
     system("cls"); /* ************Main menu ***********************  */
 
