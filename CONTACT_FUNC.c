@@ -71,119 +71,134 @@ void deleteContact(CONTACT *c)
 
 {
     system("cls");
-
+    CONTACT temp;
+    memset(&temp, 0, sizeof(CONTACT));
     fflush(stdin);
-    char name[] = {0};
+
+    char name[BUFFER] = {0};
+    int ans = 0;
     printf("\n\n\t..::DELETE A CONTACT\n\t==========================\n\t..::Enter the name of contact to delete:");
 
-    scanf("%[^\n]", &name);
+    fgets(name, BUFFER, stdin);
 
-    fp = fopen("contact.dat", "rb+");
+    fp = fopen("contact.dat", "rb");
+    ft = fopen("temp.dat", "wb");
+
     checkOpen(fp);
-    // ft = fopen("temp.dat", "wb");
-    ft = tmpfile();
-    if (ft == NULL)
-    {
-        fprintf(stderr, "Could not create temporary FILE");
-        exit(1);
-    }
+    checkOpen(ft);
 
-    while (fread(c, sizeof(CONTACT), 1, fp))
-        if (strcmp(name, c->name))
-            fwrite(c, sizeof(CONTACT), 1, ft);
-
-    while (fread(c, sizeof(CONTACT), 1, ft))
-        fwrite(c, sizeof(CONTACT), 1, fp);
-
-    fclose(fp);
-
-    fclose(ft);
-
-    // remove("contact.dll");
-
-    // rename("temp.dat", "contact.dll");
-}
-
-void editContact()
-{
-    CONTACT temp;
-    system("cls");
-
-    char name[] = {0};
-    fp = fopen("contact.dat", "rb+");
-    checkOpen(fp);
-
-    // ft = fopen("temp.dat", "w");
-    ft = tmpfile();
-
-    if (ft == NULL)
-    {
-        fprintf(stderr, "Could not create temporary FILE");
-        exit(1);
-    }
-
-    fflush(stdin);
-
-    printf("..::Edit contact\n===============================\n\n\t..::Enter the name of contact to edit:");
-
-    scanf("%[^\n]", name);
-
-    while (fread(&temp, sizeof(CONTACT), 1, fp) == 1)
+    while (fread(&temp, sizeof(CONTACT), 1, fp))
 
     {
-
-        if (strcmp(name, temp.name))
-
+        if (!strcmp(name, temp.name))
+        {
+            printf("Are you sure you want to delete this contact ?\nName\t: %sPhone\t: %ld\nAddress\t: %sEmail\t: %s\nYES[1]   NO[0]:", temp.name, temp.number, temp.address, temp.email);
+            scanf("%d", &ans);
+            while (ans)
+            {
+                break;
+            }
+        }
+        else
             fwrite(&temp, sizeof(CONTACT), 1, ft);
     }
 
     fflush(stdin);
 
-    printf("\n\n..::Editing '%s'\n\n", name);
-
-    printf("..::Name(Use identical):");
-
-    scanf("%[^\n]", &temp.name);
-
-    fflush(stdin);
-
-    printf("..::Phone:");
-
-    scanf("%ld", &temp.number);
-
-    fflush(stdin);
-
-    printf("..::address:");
-
-    scanf("%[^\n]", &temp.address);
-
-    fflush(stdin);
-
-    printf("..::email address:");
-
-    gets(temp.email);
-
-    printf("\n");
-
-    fwrite(&temp, sizeof(CONTACT), 1, ft);
-
-    while (fread(&temp, sizeof(CONTACT), 1, ft))
-        fwrite(&temp, sizeof(CONTACT), 1, fp);
+    if (ans)
+    {
+        printf("\n\n..::Deleted.............\n");
+    }
+    else
+        printf("\nName doesn't exist in contact list!!!");
 
     fclose(fp);
-
     fclose(ft);
 
-    // remove("contact.dll");
+    remove("contact.dat");
+    rename("temp.dat", "contact.dat");
+}
 
-    // rename("temp.dat", "contact.dll");
+void editContact()
+{
+    CONTACT temp;
+    int ans = 0;
+    memset(&temp, 0, sizeof(CONTACT));
+    system("cls");
+
+    char name[BUFFER] = {0};
+    fp = fopen("contact.dat", "rb");
+    ft = fopen("temp.dat", "wb");
+    checkOpen(fp);
+    checkOpen(ft);
+
+    fflush(stdin);
+
+    printf("..::Edit contact\n===============================\n\n\t..::Enter the name of contact to edit:");
+
+    fgets(name, BUFFER, stdin);
+
+    while (fread(&temp, sizeof(CONTACT), 1, fp))
+
+    {
+        if (!strcmp(name, temp.name))
+        {
+            printf("Are you sure you want to edit this name ? -> %s\n YES[1]   NO[0]:", temp.name);
+            scanf("%d", &ans);
+            while (ans)
+            {
+                printf("\n\n..::Editing %s\n", name);
+
+                fflush(stdin);
+                printf("..::Name(Use identical):");
+                fgets(temp.name, BUFFER, stdin);
+
+                fflush(stdin);
+
+                printf("..::Phone:");
+
+                scanf("%ld", &temp.number);
+
+                fflush(stdin);
+
+                printf("..::address:");
+
+                fgets(temp.address, BUFFER, stdin);
+
+                fflush(stdin);
+
+                printf("..::email address:");
+
+                fgets(temp.email, BUFFER, stdin);
+
+                printf("\n");
+                fwrite(&temp, sizeof(CONTACT), 1, ft);
+                break;
+            }
+        }
+        else
+            fwrite(&temp, sizeof(CONTACT), 1, ft);
+    }
+
+    fflush(stdin);
+
+    if (ans)
+    {
+        printf("\nSuccessfully Edited\n");
+    }
+
+    fclose(fp);
+    fclose(ft);
+
+    remove("contact.dat");
+    rename("temp.dat", "contact.dat");
 }
 
 void searchContact()
 {
     int len, found, ch = 1;
     CONTACT search;
-    char query[] = {0};
+    char query[BUFFER];
     do
     {
 
@@ -193,7 +208,7 @@ void searchContact()
 
         fflush(stdin);
 
-        scanf("%[^\n]", query);
+        fgets(query, BUFFER, stdin);
 
         len = strlen(query);
 
@@ -206,43 +221,22 @@ void searchContact()
         while (fread(&search, sizeof(CONTACT), 1, fp) == 1)
 
         {
-
-            // for (i = 0; i <= l; i++)
-
-            //     name[i] = list.name[i];
-
-            // name[l] = '\0';
-
             if (strcmp(search.name, query) == 0)
 
             {
-
                 printf("\n..::Name\t: %s\n..::Phone\t: %ld\n..::Address\t: %s\n..::Email\t: %s\n", search.name, search.number, search.address, search.email);
-
                 found++;
-
-                // if (found % 4 == 0)
-
-                // {
-
-                //     printf("..::Press any key to continue...");
-
-                //     getch();
-                // }
             }
         }
 
         if (!found)
-
+        {
             printf("\n..::No match found!");
-
+            printf("\n ..::Try again?\n\n\t[1] Yes\t\t[0] No\n\t");
+        }
         else
-
             printf("\n..::%d match(s) found!", found);
-
         fclose(fp);
-
-        printf("\n ..::Try again?\n\n\t[1] Yes\t\t[0] No\n\t");
 
         scanf("%d", &ch);
 

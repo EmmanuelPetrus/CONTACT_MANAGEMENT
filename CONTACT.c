@@ -3,10 +3,13 @@
 int main()
 
 {
+
     int ch;
     CONTACT con;
     memset(&con, 0, sizeof(CONTACT));
     CONTACT *pCon = &con;
+
+main:
     system("cls"); /* ************Main menu ***********************  */
 
     printf("\n\t **** Welcome to Contact Management System ****");
@@ -60,16 +63,35 @@ int main()
     case 5:
         deleteContact(pCon);
         break;
+
+    default:
+        printf("Invalid choice");
+
+        break;
+    }
+
+    printf("\n\n\n..::Enter the Choice:\n\n\t[1] Main Menu\t\t[0] Exit\n");
+
+    scanf("%d", &ch);
+
+    switch (ch)
+
+    {
+
+    case 1:
+
+        goto main;
+
+    case 0:
+
+        break;
+
     default:
 
         printf("Invalid choice");
 
         break;
     }
-
-    // printf("\n\n\n..::Enter the Choice:\n\n\t[1] Main Menu\t\t[0] Exit\n");
-
-    // scanf("%d", &ch);
 
     return 0;
 }
