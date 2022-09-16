@@ -1,4 +1,4 @@
 *.json
 *.dat
 *.o
-*.exe
+*test.exe
