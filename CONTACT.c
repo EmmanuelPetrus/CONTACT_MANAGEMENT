@@ -11,7 +11,7 @@ int main()
 
 main:
     system("cls"); /* ************Main menu ***********************  */
-
+    system("color fc");
     printf("\n\t **** Welcome to Contact Management System ****");
 
     printf("\n\n\n\t\t\tMAIN MENU\n\t\t=====================\n\t\t[1] Add a new Contact\n\t\t[2] List all Contacts\n\t\t[3] Search for contact\n\t\t[4] Edit a Contact\n\t\t[5] Delete a Contact\n\t\t[0] Exit\n\t\t=================\n\t\t");
@@ -25,9 +25,15 @@ main:
     {
     case 0:
 
-        printf("\n\n\t\tAre you sure you want to exit?");
+        printf("\n\t\tAre you sure you want to exit?\n\t\t[1] Yes\t\t[0] No:\t");
+        scanf("%d", &ch);
+        if (ch)
+        {
+            exit(1);
+        }
 
-        break;
+        else
+            goto main;
 
         /* *********************Add new contacts************  */
 
@@ -65,11 +71,12 @@ main:
         break;
 
     default:
-        printf("Invalid choice");
+
+        printf("\t\tInvalid choice!!!!");
 
         break;
     }
-
+    getc(stdin);
     printf("\n\n\n..::Enter the Choice:\n\n\t[1] Main Menu\t\t[0] Exit\n");
 
     scanf("%d", &ch);
