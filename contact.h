@@ -9,7 +9,7 @@ typedef struct contact CONTACT;
 struct contact
 {
     char name[BUFFER];
-    long int number;
+    char number[20];
     char address[BUFFER];
     char email[BUFFER];
 };

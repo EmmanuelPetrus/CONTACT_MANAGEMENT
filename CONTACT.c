@@ -81,8 +81,8 @@ main:
 
         break;
     }
-    getc(stdin);
-    printf("\n\n\n..::Enter the Choice:\n\n\t[1] Main Menu\t\t[0] Exit\n");
+
+    printf("\n\n\n..::Enter the Choice:\n\n\t[1] Main Menu\t\t[0] Exit:");
 
     scanf("%d", &ch);
 

@@ -22,8 +22,7 @@ void addNewContact(CONTACT *details)
         fgets(details->name, BUFFER, stdin);
 
         printf("Phone:");
-        scanf("%ld", &details->number);
-        fgetc(stdin);
+        fgets(details->number, 20, stdin);
 
         printf("Address:");
         fgets(details->address, BUFFER, stdin);
@@ -54,7 +53,7 @@ void listContact(CONTACT *b)
 
     while (fread(b, sizeof(CONTACT), 1, fp))
     {
-        printf("\nName\t: %sPhone\t: %ld\nAddress\t: %sEmail\t: %s\n", b->name, b->number, b->address, b->email);
+        printf("\nName\t: %sPhone\t: %s\nAddress\t: %sEmail\t: %s\n", b->name, b->number, b->address, b->email);
         found++;
     }
 
@@ -92,7 +91,7 @@ void deleteContact(CONTACT *c)
     {
         if (!strcmp(name, temp.name))
         {
-            printf("Are you sure you want to delete this contact ?\nName\t: %sPhone\t: %ld\nAddress\t: %sEmail\t: %s\nYES[1]   NO[0]:", temp.name, temp.number, temp.address, temp.email);
+            printf("Are you sure you want to delete this contact ?\nName\t: %sPhone\t: %s\nAddress\t: %sEmail\t: %s\nYES[1]   NO[0]:", temp.name, temp.number, temp.address, temp.email);
             scanf("%d", &ans);
             while (ans)
             {
@@ -127,14 +126,14 @@ void editContact()
     system("cls");
 
     char name[BUFFER] = {0};
-    fp = fopen("contact.dat", "rb");
-    ft = fopen("temp.dat", "wb");
+edit:
+    fp = fopen("contact.dat", "rb+");
+
     checkOpen(fp);
-    checkOpen(ft);
 
     fflush(stdin);
 
-    printf("..::Edit contact\n===============================\n\n\t..::Enter the name of contact to edit:");
+    printf("\t\t\t..::Edit contact\n===============================\n..::Enter the name of contact to edit:");
 
     fgets(name, BUFFER, stdin);
 
@@ -144,7 +143,7 @@ void editContact()
         if (!strcmp(name, temp.name))
         {
             printf("Are you sure you want to edit this name ? -> %s\n YES[1]   NO[0]:", temp.name);
-            scanf("%d", &ans);
+            scanf(" %d", &ans);
             while (ans)
             {
                 printf("\n\n..::Editing %s\n", name);
@@ -157,7 +156,7 @@ void editContact()
 
                 printf("..::Phone:");
 
-                scanf("%ld", &temp.number);
+                fgets(temp.number, 20, stdin);
 
                 fflush(stdin);
 
@@ -172,12 +171,12 @@ void editContact()
                 fgets(temp.email, BUFFER, stdin);
 
                 printf("\n");
-                fwrite(&temp, sizeof(CONTACT), 1, ft);
+                fseek(fp, -96, SEEK_CUR);
+                fwrite(&temp, sizeof(CONTACT), 1, fp);
+                fclose(fp);
                 break;
             }
         }
-        else
-            fwrite(&temp, sizeof(CONTACT), 1, ft);
     }
 
     fflush(stdin);
@@ -186,12 +185,19 @@ void editContact()
     {
         printf("\nSuccessfully Edited\n");
     }
-
-    fclose(fp);
-    fclose(ft);
-
-    remove("contact.dat");
-    rename("temp.dat", "contact.dat");
+    else
+    {
+        printf("\t\nContact doesn't exist!!!\n");
+        printf("\t\nDo you want to search for another contact ? \n\tYES[1]   NO[0]:");
+        scanf(" %d", &ans);
+        if (ans)
+        {
+            ans = 0;
+            goto edit;
+        }
+        else
+            fclose(fp);
+    }
 }
 
 void searchContact()
@@ -224,7 +230,7 @@ void searchContact()
             if (strcmp(search.name, query) == 0)
 
             {
-                printf("\n..::Name\t: %s\n..::Phone\t: %ld\n..::Address\t: %s\n..::Email\t: %s\n", search.name, search.number, search.address, search.email);
+                printf("\n..::Name\t: %s\n..::Phone\t: %s\n..::Address\t: %s\n..::Email\t: %s\n", search.name, search.number, search.address, search.email);
                 found++;
             }
         }
