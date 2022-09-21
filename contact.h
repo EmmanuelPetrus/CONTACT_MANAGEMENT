@@ -5,6 +5,17 @@
 #include <ctype.h>
 #define BUFFER 30
 typedef struct contact CONTACT;
+typedef struct bst bArrange;
+
+bArrange *pRoot;
+
+struct bst
+{
+    CONTACT *data;
+    int count;
+    bArrange *pLeft;
+    bArrange *pRight;
+};
 
 struct contact
 {
@@ -20,5 +31,8 @@ void deleteContact(CONTACT *c);
 void searchContact();
 void listContact(CONTACT *b);
 void checkOpen(FILE *fs);
-
+bArrange *addNewNode(CONTACT *k, bArrange *m);
+bArrange *createNode(CONTACT *m);
+void listNode(bArrange *pNode);
+void freenodes(bArrange *pNode);
 FILE *fp, *ft;

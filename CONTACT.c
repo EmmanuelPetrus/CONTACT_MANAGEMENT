@@ -8,6 +8,7 @@ int main()
     CONTACT con;
     memset(&con, 0, sizeof(CONTACT));
     CONTACT *pCon = &con;
+    bArrange *pRoot = NULL;
 
 main:
     system("cls"); /* ************Main menu ***********************  */

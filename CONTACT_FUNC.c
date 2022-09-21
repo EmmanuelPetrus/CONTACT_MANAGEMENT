@@ -49,14 +49,25 @@ void listContact(CONTACT *b)
     checkOpen(fp);
     fflush(stdin);
 
+    pRoot = NULL;
+
     int found = 0;
 
     while (fread(b, sizeof(CONTACT), 1, fp))
     {
-        printf("\nName\t: %sPhone\t: %s\nAddress\t: %sEmail\t: %s\n", b->name, b->number, b->address, b->email);
+        if (pRoot == NULL)
+        {
+            pRoot = createNode(b);
+            printf("%s\n", pRoot->data->name);
+        }
+        else
+        {
+            addNewNode(b, pRoot);
+        }
         found++;
     }
-
+    listNode(pRoot);
+    freenodes(pRoot);
     if (found)
 
     {
@@ -64,6 +75,70 @@ void listContact(CONTACT *b)
     }
 
     fclose(fp);
+}
+
+void listNode(bArrange *b)
+{
+    if (b->pLeft != NULL)
+        listNode(b->pLeft);
+
+    for (int i = 0; i < b->count; i++)
+        printf("\nName\t: %sPhone\t: %sAddress\t: %sEmail\t: %s\n", b->data->name, b->data->number, b->data->address, b->data->email);
+
+    if (b->pRight != NULL)
+        listNode(b->pRight);
+}
+
+void freenodes(bArrange *b)
+{
+    if (b == NULL)
+        return;
+    if (b->pLeft != NULL)
+        freenodes(b->pLeft);
+    if (b->pRight != NULL)
+        freenodes(b->pRight);
+    free(b);
+}
+
+bArrange *createNode(CONTACT *m)
+{
+    bArrange *pNode = (bArrange *)malloc(sizeof(bArrange));
+    pNode->data = m;
+    pNode->pLeft = pNode->pRight = NULL;
+    pNode->count = 1;
+    return pNode;
+}
+
+bArrange *addNewNode(CONTACT *m, bArrange *k)
+{
+    if (k == NULL)
+        return createNode(m);
+
+    if (!strcmp(m->name, k->data->name))
+    {
+        ++k->count;
+        return k;
+    }
+    if (strcmp(m->name, k->data->name) < 0)
+    {
+        if (k->pLeft == NULL)
+        {
+            k->pLeft = createNode(m);
+            return k->pLeft;
+        }
+        else
+            return addNewNode(m, k->pLeft);
+    }
+    else
+    {
+        if (k->pRight == NULL)
+        {
+            k->pRight = createNode(m);
+            return k->pRight;
+        }
+        else
+            return addNewNode(m, k->pRight);
+    }
 }
 
 void deleteContact(CONTACT *c)
