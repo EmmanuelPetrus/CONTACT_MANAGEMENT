@@ -2,3 +2,4 @@
 *.dat
 *.o
 *test.exe
+*test.c
